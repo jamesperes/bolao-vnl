@@ -12,29 +12,43 @@
 {% endblock %}
 
 {% block content %}
+<style>
+  .brasil-stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.65rem; margin-bottom:1.25rem; }
+  @media (max-width:640px) { .brasil-stats-grid { grid-template-columns:repeat(2,1fr); } }
+
+  .jogo-row { display:flex; align-items:center; gap:.5rem; padding:.7rem .25rem; border-bottom:1px solid #f1f5f9; text-decoration:none; color:inherit; flex-wrap:wrap; }
+  .jogo-row:last-child { border-bottom:none; }
+  .jogo-row:hover { background:#f8fafc; border-radius:8px; }
+  .jogo-data { width:2.3rem; font-size:.72rem; color:#94a3b8; flex-shrink:0; }
+  .jogo-bandeira { font-size:1.15rem; flex-shrink:0; }
+  .jogo-time { flex:1; font-weight:600; font-size:.88rem; min-width:60px; }
+  .jogo-placar { font-weight:900; font-size:1.1rem; flex-shrink:0; min-width:3.2rem; text-align:center; }
+  .jogo-sets { font-size:.68rem; color:#94a3b8; width:100%; padding-left:2.8rem; margin-top:-.1rem; }
+</style>
+
 <!-- Tabs gênero -->
 <div class="tabs">
   <a href="?genero=F" class="tab {% if genero == 'F' %}active{% endif %}">♀ Feminino</a>
   <a href="?genero=M" class="tab {% if genero == 'M' %}active{% endif %}">♂ Masculino</a>
 </div>
 
-<!-- Cards de resumo -->
-<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.25rem;">
-  <div style="background:white;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+<!-- Cards resumo 2×2 no mobile -->
+<div class="brasil-stats-grid">
+  <div style="background:white;border-radius:10px;padding:.9rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
     <div style="font-size:2rem;font-weight:900;color:#16a34a;">{{ vitorias }}</div>
-    <div style="font-size:.78rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Vitórias</div>
+    <div style="font-size:.72rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Vitórias</div>
   </div>
-  <div style="background:white;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+  <div style="background:white;border-radius:10px;padding:.9rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
     <div style="font-size:2rem;font-weight:900;color:#dc2626;">{{ derrotas }}</div>
-    <div style="font-size:.78rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Derrotas</div>
+    <div style="font-size:.72rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Derrotas</div>
   </div>
-  <div style="background:white;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+  <div style="background:white;border-radius:10px;padding:.9rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
     <div style="font-size:2rem;font-weight:900;color:#0a2351;">{{ sets_pro }}</div>
-    <div style="font-size:.78rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Sets pró</div>
+    <div style="font-size:.72rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Sets pró</div>
   </div>
-  <div style="background:white;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+  <div style="background:white;border-radius:10px;padding:.9rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
     <div style="font-size:2rem;font-weight:900;color:#64748b;">{{ sets_contra }}</div>
-    <div style="font-size:.78rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Sets contra</div>
+    <div style="font-size:.72rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Sets contra</div>
   </div>
 </div>
 
@@ -42,44 +56,37 @@
 <div class="card" style="margin-bottom:1rem;">
   <div class="card-title">📅 Jogos realizados</div>
   {% for jogo in jogos %}
-  {% with brasil_e_a=jogo.time_a.nome|stringformat:"s" %}
   {% if jogo.time_a.nome == 'Brasil' %}
     {% with s_pro=jogo.sets_a s_con=jogo.sets_b adversario=jogo.time_b %}
-    <a href="{% url 'detalhe_jogo' jogo.pk %}" style="display:flex;align-items:center;gap:.75rem;padding:.65rem .5rem;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit;">
-      <div style="width:2.5rem;text-align:center;font-size:.75rem;color:#64748b;flex-shrink:0;">{{ jogo.data_hora|date:"d/m" }}</div>
-      <div style="font-size:1.2rem;flex-shrink:0;">🇧🇷</div>
-      <div style="flex:1;font-weight:600;font-size:.92rem;color:#0a2351;">Brasil</div>
-      <div style="font-weight:900;font-size:1.15rem;color:{% if s_pro > s_con %}#16a34a{% else %}#dc2626{% endif %};min-width:3rem;text-align:center;">
+    <a href="{% url 'detalhe_jogo' jogo.pk %}" class="jogo-row">
+      <div class="jogo-data">{{ jogo.data_hora|date:"d/m" }}</div>
+      <div class="jogo-bandeira">🇧🇷</div>
+      <div class="jogo-time" style="color:#0a2351;">Brasil</div>
+      <div class="jogo-placar" style="color:{% if s_pro > s_con %}#16a34a{% else %}#dc2626{% endif %};">
         {{ s_pro }}<span style="color:#94a3b8;font-size:.85rem;font-weight:400;">×</span>{{ s_con }}
       </div>
-      <div style="flex:1;text-align:right;font-weight:600;font-size:.92rem;color:#475569;">{{ adversario.nome }} {{ adversario.bandeira }}</div>
+      <div class="jogo-time" style="text-align:right;color:#475569;">{{ adversario.nome }} {{ adversario.bandeira }}</div>
       {% with sets=jogo.sets_detalhados %}
-      {% if sets %}
-      <div style="font-size:.72rem;color:#94a3b8;min-width:80px;text-align:right;">{% for s in sets %}{{ s.0 }}-{{ s.1 }}{% if not forloop.last %} · {% endif %}{% endfor %}</div>
-      {% endif %}
+      {% if sets %}<div class="jogo-sets">{% for s in sets %}{{ s.0 }}-{{ s.1 }}{% if not forloop.last %} · {% endif %}{% endfor %}</div>{% endif %}
       {% endwith %}
     </a>
     {% endwith %}
   {% else %}
     {% with s_pro=jogo.sets_b s_con=jogo.sets_a adversario=jogo.time_a %}
-    <a href="{% url 'detalhe_jogo' jogo.pk %}" style="display:flex;align-items:center;gap:.75rem;padding:.65rem .5rem;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit;">
-      <div style="width:2.5rem;text-align:center;font-size:.75rem;color:#64748b;flex-shrink:0;">{{ jogo.data_hora|date:"d/m" }}</div>
-      <div style="font-size:1.2rem;flex-shrink:0;">{{ adversario.bandeira }}</div>
-      <div style="flex:1;font-weight:600;font-size:.92rem;color:#475569;">{{ adversario.nome }}</div>
-      <div style="font-weight:900;font-size:1.15rem;color:{% if s_pro > s_con %}#16a34a{% else %}#dc2626{% endif %};min-width:3rem;text-align:center;">
+    <a href="{% url 'detalhe_jogo' jogo.pk %}" class="jogo-row">
+      <div class="jogo-data">{{ jogo.data_hora|date:"d/m" }}</div>
+      <div class="jogo-bandeira">{{ adversario.bandeira }}</div>
+      <div class="jogo-time" style="color:#475569;">{{ adversario.nome }}</div>
+      <div class="jogo-placar" style="color:{% if s_pro > s_con %}#16a34a{% else %}#dc2626{% endif %};">
         {{ s_con }}<span style="color:#94a3b8;font-size:.85rem;font-weight:400;">×</span>{{ s_pro }}
-        <span style="font-size:.65rem;font-weight:600;display:block;color:{% if s_pro > s_con %}#16a34a{% else %}#dc2626{% endif %};">BRA {{ s_pro }}-{{ s_con }}</span>
       </div>
-      <div style="flex:1;text-align:right;font-weight:700;font-size:.92rem;color:#0a2351;">Brasil 🇧🇷</div>
+      <div class="jogo-time" style="text-align:right;color:#0a2351;font-weight:700;">Brasil 🇧🇷</div>
       {% with sets=jogo.sets_detalhados %}
-      {% if sets %}
-      <div style="font-size:.72rem;color:#94a3b8;min-width:80px;text-align:right;">{% for s in sets %}{{ s.0 }}-{{ s.1 }}{% if not forloop.last %} · {% endif %}{% endfor %}</div>
-      {% endif %}
+      {% if sets %}<div class="jogo-sets">{% for s in sets %}{{ s.0 }}-{{ s.1 }}{% if not forloop.last %} · {% endif %}{% endfor %}</div>{% endif %}
       {% endwith %}
     </a>
     {% endwith %}
   {% endif %}
-  {% endwith %}
   {% empty %}
   <p style="color:#94a3b8;text-align:center;padding:1.5rem;">Nenhum jogo realizado ainda.</p>
   {% endfor %}
@@ -90,11 +97,11 @@
 <div class="card">
   <div class="card-title">⭐ Destaques individuais — jogadores brasileiros</div>
   <div style="overflow-x:auto;">
-    <table style="min-width:500px;">
+    <table style="min-width:480px;">
       <thead>
         <tr>
           <th>Jogador</th>
-          <th>Posição</th>
+          <th>Pos.</th>
           <th>Jogo</th>
           <th style="text-align:center;">Pts</th>
           <th style="text-align:center;">Aces</th>
@@ -105,32 +112,26 @@
       <tbody>
         {% for d in destaques %}
         <tr>
-          <td style="font-weight:700;color:#0a2351;">{{ d.jogador }}</td>
-          <td style="color:#64748b;font-size:.85rem;">{{ d.posicao }}</td>
-          <td style="font-size:.82rem;">
+          <td style="font-weight:700;color:#0a2351;white-space:nowrap;">{{ d.jogador }}</td>
+          <td style="color:#64748b;font-size:.82rem;">{{ d.posicao }}</td>
+          <td style="font-size:.8rem;">
             {% if d.jogo %}
-            <a href="{% url 'detalhe_jogo' d.jogo.pk %}" style="color:#2563eb;text-decoration:none;">
+            <a href="{% url 'detalhe_jogo' d.jogo.pk %}" style="color:#2563eb;text-decoration:none;white-space:nowrap;">
               {% if d.jogo.time_a.nome == 'Brasil' %}vs {{ d.jogo.time_b.nome }}{% else %}vs {{ d.jogo.time_a.nome }}{% endif %}
-              <span style="color:#94a3b8;">{{ d.jogo.data_hora|date:"d/m" }}</span>
+              <span style="color:#94a3b8;display:block;font-size:.75rem;">{{ d.jogo.data_hora|date:"d/m" }}</span>
             </a>
             {% endif %}
           </td>
           <td style="text-align:center;">
-            {% if d.pontos is not None %}
-            <span style="background:#dbeafe;color:#1d4ed8;border-radius:20px;padding:.15rem .5rem;font-size:.8rem;font-weight:700;">{{ d.pontos }}</span>
-            {% else %}—{% endif %}
+            {% if d.pontos is not None %}<span style="background:#dbeafe;color:#1d4ed8;border-radius:20px;padding:.15rem .5rem;font-size:.78rem;font-weight:700;">{{ d.pontos }}</span>{% else %}—{% endif %}
           </td>
           <td style="text-align:center;">
-            {% if d.aces %}
-            <span style="background:#dcfce7;color:#15803d;border-radius:20px;padding:.15rem .5rem;font-size:.8rem;font-weight:700;">{{ d.aces }}</span>
-            {% else %}—{% endif %}
+            {% if d.aces %}<span style="background:#dcfce7;color:#15803d;border-radius:20px;padding:.15rem .5rem;font-size:.78rem;font-weight:700;">{{ d.aces }}</span>{% else %}—{% endif %}
           </td>
           <td style="text-align:center;">
-            {% if d.bloqueios %}
-            <span style="background:#f3e8ff;color:#7e22ce;border-radius:20px;padding:.15rem .5rem;font-size:.8rem;font-weight:700;">{{ d.bloqueios }}</span>
-            {% else %}—{% endif %}
+            {% if d.bloqueios %}<span style="background:#f3e8ff;color:#7e22ce;border-radius:20px;padding:.15rem .5rem;font-size:.78rem;font-weight:700;">{{ d.bloqueios }}</span>{% else %}—{% endif %}
           </td>
-          <td style="font-size:.8rem;color:#64748b;font-style:italic;">{{ d.observacao }}</td>
+          <td style="font-size:.78rem;color:#64748b;font-style:italic;">{{ d.observacao }}</td>
         </tr>
         {% endfor %}
       </tbody>
