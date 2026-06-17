@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Sum, Count, Q
 from .models import Convite, Usuario, Jogo, Palpite, Time, Destaque, PalpiteCampeao
-from .forms import RegistroForm, PalpiteForm
+from .forms import RegistroForm, RegistroPublicoForm, PalpiteForm
 
 
 def entrar_convite(request, codigo):
@@ -19,6 +19,21 @@ def entrar_convite(request, codigo):
     else:
         form = RegistroForm(convite)
     return render(request, 'core/registro.html', {'form': form, 'convite': convite})
+
+
+def registro_publico(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    if request.method == 'POST':
+        form = RegistroPublicoForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f'Bem-vindo ao bolão, {user.username}!')
+            return redirect('home')
+    else:
+        form = RegistroPublicoForm()
+    return render(request, 'core/registro_publico.html', {'form': form})
 
 
 def login_view(request):

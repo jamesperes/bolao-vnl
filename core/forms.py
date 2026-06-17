@@ -23,6 +23,13 @@ class RegistroForm(UserCreationForm):
         return user
 
 
+class RegistroPublicoForm(UserCreationForm):
+    class Meta:
+        model = Usuario
+        fields = ('username', 'password1', 'password2')
+        labels = {'username': 'Nome de usuário'}
+
+
 SETS_CHOICES = [(i, str(i)) for i in range(4)]
 
 class PalpiteForm(forms.ModelForm):
