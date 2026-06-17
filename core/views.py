@@ -73,12 +73,15 @@ def home(request):
         'proximos': Jogo.objects.filter(encerrado=False).count(),
         'participantes': Usuario.objects.filter(is_staff=False).count(),
     }
+    palpites_usuario = {p.jogo_id: p for p in request.user.palpites.all()}
+
     return render(request, 'core/home.html', {
         'proximos_f': proximos_f,
         'proximos_m': proximos_m,
         'recentes': recentes,
         'ranking': ranking,
         'stats': stats,
+        'palpites_usuario': palpites_usuario,
     })
 
 

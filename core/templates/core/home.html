@@ -42,7 +42,15 @@
         <div class="vs">{{ jogo.data_hora|date:"d/m" }}</div>
         <div style="font-size:.75rem;color:#94a3b8;font-weight:600;">{{ jogo.data_hora|time:"H:i" }} (BRT)</div>
         {% if jogo.palpite_aberto %}
-        <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-gold btn-sm" style="margin-top:.3rem;">Palpitar</a>
+          {% if jogo.pk in palpites_usuario %}
+            {% with p=palpites_usuario|dictsort:"sets_a" %}{% endwith %}
+            {% for jid, p in palpites_usuario.items %}{% if jid == jogo.pk %}
+            <div style="background:#dbeafe;border-radius:6px;padding:.2rem .45rem;font-size:.78rem;font-weight:700;color:#1d4ed8;margin-top:.3rem;">🎯 {{ p.sets_a }}×{{ p.sets_b }}</div>
+            <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-sm" style="margin-top:.25rem;background:#7c3aed;color:white;font-size:.72rem;">Alterar palpite</a>
+            {% endif %}{% endfor %}
+          {% else %}
+            <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-gold btn-sm" style="margin-top:.3rem;">Palpitar</a>
+          {% endif %}
         {% endif %}
       </div>
       <div class="time time-b">{{ jogo.time_b.bandeira }} {{ jogo.time_b.nome }}</div>
@@ -65,7 +73,14 @@
         <div class="vs">{{ jogo.data_hora|date:"d/m" }}</div>
         <div style="font-size:.75rem;color:#94a3b8;font-weight:600;">{{ jogo.data_hora|time:"H:i" }} (BRT)</div>
         {% if jogo.palpite_aberto %}
-        <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-gold btn-sm" style="margin-top:.3rem;">Palpitar</a>
+          {% if jogo.pk in palpites_usuario %}
+            {% for jid, p in palpites_usuario.items %}{% if jid == jogo.pk %}
+            <div style="background:#dbeafe;border-radius:6px;padding:.2rem .45rem;font-size:.78rem;font-weight:700;color:#1d4ed8;margin-top:.3rem;">🎯 {{ p.sets_a }}×{{ p.sets_b }}</div>
+            <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-sm" style="margin-top:.25rem;background:#7c3aed;color:white;font-size:.72rem;">Alterar palpite</a>
+            {% endif %}{% endfor %}
+          {% else %}
+            <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-gold btn-sm" style="margin-top:.3rem;">Palpitar</a>
+          {% endif %}
         {% endif %}
       </div>
       <div class="time time-b">{{ jogo.time_b.bandeira }} {{ jogo.time_b.nome }}</div>
