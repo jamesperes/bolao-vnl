@@ -11,15 +11,15 @@
 {% endblock %}
 
 {% block content %}
-<div class="card">
-  <table>
+<div class="card" style="overflow-x:auto;">
+  <table style="min-width:100%;">
     <thead>
       <tr>
-        <th style="width:50px;">#</th>
+        <th style="width:40px;">#</th>
         <th>Participante</th>
-        <th style="text-align:center;">Palpites</th>
-        <th style="text-align:center;">Exatos 🎯</th>
-        <th style="text-align:right;">Pontos</th>
+        <th style="text-align:center;" class="col-hide-mobile">Palpites</th>
+        <th style="text-align:center;" class="col-hide-mobile">Exatos 🎯</th>
+        <th style="text-align:right;">Pts</th>
       </tr>
     </thead>
     <tbody>
@@ -36,8 +36,8 @@
         {% if u == user %}<strong>{{ u.username }}</strong> <span class="badge badge-blue" style="font-size:.65rem;">você</span>
         {% else %}{{ u.username }}{% endif %}
       </td>
-      <td style="text-align:center;color:#64748b;">{{ u.total_palpites|default:0 }}</td>
-      <td style="text-align:center;">
+      <td style="text-align:center;color:#64748b;" class="col-hide-mobile">{{ u.total_palpites|default:0 }}</td>
+      <td style="text-align:center;" class="col-hide-mobile">
         {% if u.acertos_exatos %}
         <span class="badge badge-gold">{{ u.acertos_exatos }}</span>
         {% else %}<span style="color:#cbd5e1;">—</span>{% endif %}
