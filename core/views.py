@@ -129,7 +129,7 @@ def palpitar(request, jogo_id):
             p.jogo = jogo
             p.save()
             messages.success(request, 'Palpite salvo!')
-            return redirect('jogos')
+            return redirect('meus_palpites')
     else:
         form = PalpiteForm(instance=palpite_existente)
 
