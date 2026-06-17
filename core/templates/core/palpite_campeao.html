@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+{% block title %}Palpite de Campeão — Bolão VNL 2026{% endblock %}
+
+{% block hero %}
+<div class="hero">
+  <div class="container" style="padding-top:0;padding-bottom:0;">
+    <h1>🏆 Palpite de Campeão</h1>
+    <p>Qual time vai levantar o troféu? Acertou: <strong>10 pontos</strong>.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Tabs gênero -->
+<div class="tabs">
+  <a href="?genero=F" class="tab {% if genero == 'F' %}active{% endif %}">♀ Feminino</a>
+  <a href="?genero=M" class="tab {% if genero == 'M' %}active{% endif %}">♂ Masculino</a>
+</div>
+
+{% if campeao_definido %}
+<div style="background:#fef9c3;border:1.5px solid #fde047;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem;">
+  <div style="font-size:2rem;">🏆</div>
+  <div>
+    <div style="font-weight:700;color:#92400e;">Campeão definido!</div>
+    <div style="font-size:1.1rem;font-weight:800;color:#78350f;">{{ campeao_definido.bandeira }} {{ campeao_definido.nome }}</div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Meu palpite atual -->
+{% if meu_palpite %}
+<div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:.85rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem;">
+  <div style="font-size:1.8rem;">{{ meu_palpite.time.bandeira }}</div>
+  <div>
+    <div style="font-size:.78rem;color:#1d4ed8;font-weight:600;">Seu palpite atual</div>
+    <div style="font-weight:800;font-size:1.05rem;color:#0a2351;">{{ meu_palpite.time.nome }}</div>
+  </div>
+  <div style="margin-left:auto;">
+    {% if meu_palpite.pontos > 0 %}
+    <span class="badge badge-gold" style="font-size:.9rem;">+{{ meu_palpite.pontos }} pts 🎯</span>
+    {% elif campeao_definido %}
+    <span class="badge badge-gray">0 pts</span>
+    {% else %}
+    <span class="badge badge-blue">aguardando</span>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Formulário de seleção -->
+{% if not campeao_definido %}
+<div class="card" style="margin-bottom:1rem;">
+  <div class="card-title">{% if meu_palpite %}Trocar palpite{% else %}Escolher campeão{% endif %}</div>
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="genero" value="{{ genero }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem;margin-bottom:1rem;">
+      {% for t in times %}
+      <label style="display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;border-radius:10px;border:2px solid {% if meu_palpite and meu_palpite.time_id == t.pk %}#2563eb{% else %}#e2e8f0{% endif %};background:{% if meu_palpite and meu_palpite.time_id == t.pk %}#eff6ff{% else %}white{% endif %};cursor:pointer;transition:border-color .15s;">
+        <input type="radio" name="time_id" value="{{ t.pk }}" {% if meu_palpite and meu_palpite.time_id == t.pk %}checked{% endif %} style="accent-color:#2563eb;">
+        <span style="font-size:1.3rem;">{{ t.bandeira }}</span>
+        <span style="font-weight:600;font-size:.9rem;color:#0a2351;">{{ t.nome }}</span>
+      </label>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar palpite</button>
+  </form>
+</div>
+{% endif %}
+
+<!-- Palpites de todos -->
+<div class="card">
+  <div class="card-title">🗳️ Palpites do grupo</div>
+  {% if todos_palpites %}
+  <table>
+    <thead>
+      <tr>
+        <th>Participante</th>
+        <th>Campeão escolhido</th>
+        <th style="text-align:right;">Pontos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in todos_palpites %}
+      <tr {% if p.usuario == request.user %}style="background:#eff6ff;"{% endif %}>
+        <td style="font-weight:{% if p.usuario == request.user %}700{% else %}400{% endif %};">
+          {{ p.usuario.username }}
+          {% if p.usuario == request.user %}<span class="badge badge-blue" style="font-size:.65rem;margin-left:.3rem;">você</span>{% endif %}
+        </td>
+        <td>
+          <span style="font-size:1.1rem;">{{ p.time.bandeira }}</span>
+          <span style="font-weight:600;margin-left:.3rem;">{{ p.time.nome }}</span>
+        </td>
+        <td style="text-align:right;">
+          {% if p.pontos > 0 %}
+          <span style="color:#d97706;font-weight:800;">{{ p.pontos }} 🏆</span>
+          {% elif campeao_definido %}
+          <span style="color:#94a3b8;">0</span>
+          {% else %}
+          <span style="color:#94a3b8;">—</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#94a3b8;text-align:center;padding:1.5rem 0;">Nenhum palpite registrado ainda.</p>
+  {% endif %}
+</div>
+{% endblock %}

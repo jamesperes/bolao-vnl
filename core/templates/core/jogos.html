@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %}
+{% block title %}Jogos — Bolão VNL 2026{% endblock %}
+
+{% block hero %}
+<div class="hero">
+  <div class="container" style="padding-top:0;padding-bottom:0;">
+    <h1>Jogos VNL 2026</h1>
+    <p>Filtre por categoria e semana. Palpite antes do início de cada partida.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Filtro Gênero -->
+<div class="tabs">
+  <a href="?genero=F" class="tab {% if genero == 'F' %}active{% endif %}">♀ Feminino</a>
+  <a href="?genero=M" class="tab {% if genero == 'M' %}active{% endif %}">♂ Masculino</a>
+</div>
+
+<!-- Filtro Semana -->
+<div class="tabs" style="gap:.35rem;">
+  <a href="?genero={{ genero }}{% if time_sel %}&time={{ time_sel }}{% endif %}" class="tab {% if not semana_sel %}active{% endif %}" style="font-size:.8rem;">Todas as semanas</a>
+  {% for s in semanas %}
+  <a href="?genero={{ genero }}&semana={{ s }}{% if time_sel %}&time={{ time_sel }}{% endif %}" class="tab {% if semana_sel == s %}active{% endif %}" style="font-size:.8rem;">{{ s }}</a>
+  {% endfor %}
+</div>
+
+<!-- Filtro Times -->
+<div style="background:white;border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+  <div style="font-size:.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.6rem;">🏐 Filtrar por time</div>
+  <div style="display:flex;flex-wrap:wrap;gap:.4rem;">
+    <a href="?genero={{ genero }}{% if semana_sel %}&semana={{ semana_sel }}{% endif %}"
+       style="display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:20px;font-size:.8rem;font-weight:600;text-decoration:none;border:2px solid {% if not time_sel %}#2563eb{% else %}#e2e8f0{% endif %};background:{% if not time_sel %}#2563eb{% else %}white{% endif %};color:{% if not time_sel %}white{% else %}#64748b{% endif %};">
+      Todos
+    </a>
+    {% for t in times %}
+    <a href="?genero={{ genero }}{% if semana_sel %}&semana={{ semana_sel }}{% endif %}&time={{ t.pk }}"
+       style="display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:20px;font-size:.8rem;font-weight:600;text-decoration:none;border:2px solid {% if time_sel == t.pk|stringformat:'s' %}#2563eb{% else %}#e2e8f0{% endif %};background:{% if time_sel == t.pk|stringformat:'s' %}#2563eb{% else %}white{% endif %};color:{% if time_sel == t.pk|stringformat:'s' %}white{% else %}#475569{% endif %};">
+      {{ t.bandeira }} {{ t.nome }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% regroup jogos by semana as jogos_por_semana %}
+{% for grupo in jogos_por_semana %}
+<div class="card" style="margin-bottom:1.25rem;">
+  <div class="card-title" style="border-bottom:1px solid #e2e8f0;padding-bottom:.6rem;margin-bottom:.75rem;">
+    📅 {{ grupo.grouper }}
+    {% with primeiro=grupo.list.0 %}
+    <span class="badge badge-gray" style="margin-left:.5rem;font-size:.7rem;">{{ primeiro.pool }}</span>
+    {% endwith %}
+  </div>
+
+  {% for jogo in grupo.list %}
+  {% if jogo.encerrado %}
+  <a href="{% url 'detalhe_jogo' jogo.pk %}" style="text-decoration:none;color:inherit;display:block;">
+  {% endif %}
+  <div class="jogo-card" style="{% if jogo.encerrado %}background:#f8fafc;cursor:pointer;{% endif %}">
+    <!-- Time A -->
+    <div class="time time-a">
+      <div>{{ jogo.time_a.bandeira }} {{ jogo.time_a.nome }}</div>
+      <div style="font-size:.72rem;color:#94a3b8;margin-top:.1rem;">{{ jogo.arena|truncatechars:28 }}</div>
+    </div>
+
+    <!-- Centro -->
+    <div class="vs-box">
+      {% if jogo.encerrado %}
+        <div class="placar" style="color:{% if jogo.sets_a > jogo.sets_b %}#0a2351{% else %}#64748b{% endif %};">
+          {{ jogo.sets_a }}
+        </div>
+        <div style="font-size:.7rem;color:#94a3b8;margin:.05rem 0;">—</div>
+        <div class="placar" style="color:{% if jogo.sets_b > jogo.sets_a %}#0a2351{% else %}#64748b{% endif %};">
+          {{ jogo.sets_b }}
+        </div>
+        {% with sets=jogo.sets_detalhados %}
+        {% if sets %}
+        <div class="sets-det">{% for s in sets %}{{ s.0 }}-{{ s.1 }}{% if not forloop.last %} · {% endif %}{% endfor %}</div>
+        {% endif %}
+        {% endwith %}
+        {% for jid, p in palpites_usuario.items %}{% if jid == jogo.pk %}
+        <div style="margin-top:.3rem;background:#dbeafe;border-radius:5px;padding:.2rem .4rem;font-size:.72rem;font-weight:700;color:#1d4ed8;">
+          Seu: {{ p.sets_a }}×{{ p.sets_b }} · {{ p.pontos }}pt
+        </div>
+        {% endif %}{% endfor %}
+        <div style="margin-top:.35rem;font-size:.68rem;color:#94a3b8;letter-spacing:.2px;">ver detalhes →</div>
+      {% else %}
+        <div class="vs" style="font-size:.8rem;color:#94a3b8;">{{ jogo.data_hora|date:"d/m" }}</div>
+        <div style="font-size:.72rem;color:#94a3b8;">{{ jogo.get_fase_display }}</div>
+        {% for jid, p in palpites_usuario.items %}{% if jid == jogo.pk %}
+        <div style="margin-top:.3rem;background:#dbeafe;border-radius:5px;padding:.2rem .4rem;font-size:.72rem;font-weight:700;color:#1d4ed8;">
+          {{ p.sets_a }}×{{ p.sets_b }}
+        </div>
+        {% endif %}{% endfor %}
+        {% if jogo.palpite_aberto %}
+        <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-gold btn-sm" style="margin-top:.35rem;">Palpitar</a>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <!-- Time B -->
+    <div class="time time-b">
+      <div>{{ jogo.time_b.bandeira }} {{ jogo.time_b.nome }}</div>
+      <div style="font-size:.72rem;color:#94a3b8;margin-top:.1rem;">&nbsp;</div>
+    </div>
+  </div>
+  {% if jogo.encerrado %}</a>{% endif %}
+  {% endfor %}
+</div>
+{% empty %}
+<div class="card" style="text-align:center;color:#64748b;padding:2rem;">Nenhum jogo encontrado.</div>
+{% endfor %}
+{% endblock %}

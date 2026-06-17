@@ -1,0 +1,67 @@
+{% extends 'core/base.html' %}
+{% block title %}Ranking — Bolão VNL 2026{% endblock %}
+
+{% block hero %}
+<div class="hero">
+  <div class="container" style="padding-top:0;padding-bottom:0;">
+    <h1>🏆 Ranking Geral</h1>
+    <p>Classificação dos participantes por pontos acumulados.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:50px;">#</th>
+        <th>Participante</th>
+        <th style="text-align:center;">Palpites</th>
+        <th style="text-align:center;">Exatos 🎯</th>
+        <th style="text-align:right;">Pontos</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for u in participantes %}
+    <tr {% if u == user %}style="background:#eff6ff;"{% endif %}>
+      <td style="font-size:1.1rem;">
+        {% if forloop.counter == 1 %}🥇
+        {% elif forloop.counter == 2 %}🥈
+        {% elif forloop.counter == 3 %}🥉
+        {% else %}<span style="color:#94a3b8;font-size:.85rem;">{{ forloop.counter }}</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if u == user %}<strong>{{ u.username }}</strong> <span class="badge badge-blue" style="font-size:.65rem;">você</span>
+        {% else %}{{ u.username }}{% endif %}
+      </td>
+      <td style="text-align:center;color:#64748b;">{{ u.total_palpites|default:0 }}</td>
+      <td style="text-align:center;">
+        {% if u.acertos_exatos %}
+        <span class="badge badge-gold">{{ u.acertos_exatos }}</span>
+        {% else %}<span style="color:#cbd5e1;">—</span>{% endif %}
+      </td>
+      <td style="text-align:right;">
+        <strong style="font-size:1.05rem;color:#0a2351;">{{ u.pontos|default:0 }}</strong>
+        <span style="color:#94a3b8;font-size:.75rem;">pts</span>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:2rem;">Nenhum palpite registrado ainda.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Legenda pontuação -->
+<div class="card" style="font-size:.82rem;color:#64748b;">
+  <div class="card-title" style="font-size:.85rem;">📋 Como funcionam os pontos</div>
+  <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+    <span>✅ Vencedor certo → <strong style="color:#0a2351;">1 pt</strong></span>
+    <span>🎯 Sets do vencedor → <strong style="color:#0a2351;">+1 pt</strong></span>
+    <span>🏆 Placar exato → <strong style="color:#0a2351;">+2 pts</strong></span>
+    <span style="color:#0a2351;font-weight:700;">Máximo por jogo: 4 pts (ou 5 com placar exato)</span>
+  </div>
+</div>
+{% endblock %}

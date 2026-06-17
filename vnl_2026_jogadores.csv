@@ -1,0 +1,49 @@
+genero,semana,data,time_mandante,time_visitante,resultado,jogador,time,posicao,pontos,aces,bloqueios,ataque_pct,recepcao_pct,observacao
+Feminino,Semana 1,03/06/2026,Ucrânia,EUA,0-3,Kathryn Plummer,EUA,Ponteira,,,,, ,Destaque da vitória
+Feminino,Semana 1,03/06/2026,França,Japão,1-3,Yuki Ishii,Japão,Oposta,,,,,,MVP da partida
+Feminino,Semana 1,04/06/2026,Canadá,EUA,3-0,Kiera Van Ryk,Canadá,Ponteira,,,,,, Destaque - 81 pts na semana
+Feminino,Semana 1,05/06/2026,França,EUA,2-3,Kathryn Plummer,EUA,Ponteira,,,,,,Vitória em 5 sets
+Feminino,Semana 1,06/06/2026,China,Sérvia,3-0,Zhuang Yushan,China,Levantadora,,,,,, Recorde de público (17.816)
+Feminino,Semana 1,03/06/2026,Brasil,Holanda,3-1,Júlia Bergmann,Brasil,Oposta,23,1,2,,,20 pts de ataque; maior pontuadora da partida
+Feminino,Semana 1,06/06/2026,Brasil,Bulgária,3-0,Tainara,Brasil,Ponteira,14,,,,,
+Feminino,Semana 1,06/06/2026,Brasil,Bulgária,3-0,Ana Cristina,Brasil,Ponteira,13,,,,,
+Feminino,Semana 1,06/06/2026,Brasil,Bulgária,3-0,Júlia Bergmann,Brasil,Oposta,12,,,,,
+Feminino,Semana 1,07/06/2026,Brasil,Itália,3-2,Ana Cristina Souza,Brasil,Ponteira,22,2,,,,20 pts de ataque; liderou a virada (0-2 → 3-2)
+Feminino,Semana 1,07/06/2026,Brasil,Itália,3-2,Júlia Bergmann,Brasil,Oposta,18,,1,,,17 pts de ataque
+Feminino,Semana 1,07/06/2026,Brasil,Itália,3-2,Diana Duarte,Brasil,Central,15,5,4,,,6 pts de ataque; atuação completa (5 aces + 4 bloqueios)
+Feminino,Semana 1,07/06/2026,Brasil,Itália,3-2,Ekaterina Antropova,Itália,Oposta,18,3,,,,15 pts de ataque; melhor da Itália
+Feminino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Julia Kudiess,Brasil,Central,,7,22,,,22 bloqueios (líder; 7 a mais que 2ª) e 7 aces (2ª geral) na semana 1
+Feminino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Júlia Bergmann,Brasil,Oposta,81,,,,,81 pts na semana (8ª geral); consistente nos 4 jogos
+Feminino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Tainara,Brasil,Ponteira,73,,,,,73 pts na semana (12ª geral)
+Feminino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Pauline Martin,Bélgica,Oposta,95,,,,,Melhor pontuadora da semana 1 (95 pts; 40 só vs Tailândia)
+Feminino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Britt Herbots,Bélgica,Ponteira,81,,,,,2ª melhor pontuadora semana 1
+Feminino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Kiera Van Ryk,Canadá,Ponteira,81,,,,,3ª melhor pontuadora semana 1
+Feminino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Julia Szczurowska,Polônia,Central,,8,,,, Melhor sacadora semana 1 (8 aces)
+Masculino,Semana 1,10/06/2026,Bélgica,Bulgária,3-1,Ferre Reggers,Bélgica,Oposto,,,,,, Histórica 1ª vitória da Bélgica na VNL
+Masculino,Semana 1,11/06/2026,Eslovênia,Polônia,3-2,Nik Mujanovic,Eslovênia,Oposto,37,,,,,37 pts em 1 jogo — 2º maior da história da VNL
+Masculino,Semana 1,12/06/2026,Japão,Polônia,3-2,Yuji Nishida,Japão,Oposto,,,,,, Atingiu 1000 pts e 100 aces na VNL (vs Eslovênia 14/06)
+Masculino,Semana 1,13/06/2026,Brasil,Sérvia,3-0,Judson,Brasil,Oposto,13,,,,,Maior pontuador do jogo
+Masculino,Semana 1,13/06/2026,Brasil,Sérvia,3-0,Darlan,Brasil,Ponteiro,10,,,,,
+Masculino,Semana 1,13/06/2026,Brasil,Sérvia,3-0,Douglas Souza,Brasil,Ponteiro,10,,,,,
+Masculino,Semana 1,14/06/2026,Brasil,Argentina,3-2,Judson,Brasil,Oposto,15,1,1,,,13 pts de ataque; liderou a histórica virada (0-2 → 3-2)
+Masculino,Semana 1,14/06/2026,Brasil,Argentina,3-2,Honorato,Brasil,Ponteiro,13,,,,,Fundamental na virada (0-2 → 3-2)
+Masculino,Semana 1,14/06/2026,Brasil,Argentina,3-2,Adriano,Brasil,Ponteiro,12,,,,,
+Masculino,Semana 1,14/06/2026,Brasil,Argentina,3-2,Matheus Pinta,Brasil,Central,12,,,,,
+Masculino,Semana 1,14/06/2026,Brasil,Argentina,3-2,Darlan,Brasil,Ponteiro,11,,,,,
+Masculino,Semana 1,14/06/2026,Brasil,Argentina,3-2,Luciano Vicentin,Argentina,Oposto,24,,4,,,20 pts de ataque; maior pontuador do jogo
+Masculino,Semana 1,14/06/2026,Brasil,Argentina,3-2,Manuel Armoa,Argentina,Ponteiro,18,,1,,,17 pts de ataque
+Masculino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Darlan,Brasil,Ponteiro,58,6,,,,58 pts na semana (top 10 geral); 6 aces (4º geral)
+Masculino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Bruno Cachopa,Brasil,Levantador,,,,,,Melhor levantador semana 1: 280 ações - 143 sucesso (51.07%)
+Masculino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Aleksandar Nikolov,Bulgária,Ponteiro,96,,,,,Melhor pontuador semana 1 masc (96 pts total)
+Masculino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Nik Mujanovic,Eslovênia,Oposto,89,,,,,2º melhor pontuador semana 1 masc
+Masculino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Ferre Reggers,Bélgica,Oposto,77,,,,,3º melhor pontuador semana 1 masc
+Masculino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Jackson Howe,Canadá,Central,,,16,,,Melhor bloqueador semana 1 masc (16 bloqueios)
+Masculino,Semana 1,Semana 1,TOP SEMANA,TOP SEMANA,,Dmytro Yanchuk,Ucrânia,Levantador,,13,,,,Melhor sacador semana 1 masc (13 aces)
+Feminino,Semana 2,17/06/2026,França,Brasil,0-3,Ana Cristina,Brasil,Ponteira,,,,,, Destaque da vitória brasileira convincente (3-0)
+Feminino,Semana 2,17/06/2026,Japão,Sérvia,3-2,Haruka Miyashita,Japão,Levantadora,,,,,, Condução da virada japonesa; set 4 épico 32-30
+Feminino,Semana 2,17/06/2026,Tailândia,Ucrânia,2-3,Isabelle Haak,,Ponteira,,,,,, Ucrânia vence batalha de 5 sets (10-15 no 5º)
+Feminino,Semana 2,17/06/2026,Polônia,Bulgária,3-0,Julita Piasecka,Polônia,Ponteira,12,,,,,Melhor pontuadora da partida
+Feminino,Semana 2,17/06/2026,Polônia,Bulgária,3-0,Maja Koput,Polônia,Central,10,,3,,,19 anos; destaque em bloqueios
+Feminino,Semana 2,17/06/2026,Polônia,Bulgária,3-0,Magdalena Stysiak,Polônia,Oposta,9,1,1,,,Marco histórico: atingiu 1.200 pontos na VNL
+Feminino,Semana 2,17/06/2026,Polônia,Bulgária,3-0,Mikaela Stoyanova,Bulgária,Oposta,13,1,2,,,Melhor pontuadora da partida (lado perdedor)
+Feminino,Semana 2,17/06/2026,Canadá,Holanda,3-1,Kiera Van Ryk,Canadá,Ponteira,26,6,,,,26 pts e 6 aces — dominante no saque

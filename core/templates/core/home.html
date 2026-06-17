@@ -1,0 +1,138 @@
+{% extends 'core/base.html' %}
+{% block title %}Início — Bolão VNL 2026{% endblock %}
+
+{% block hero %}
+<div class="hero">
+  <div class="container" style="padding-top:0;padding-bottom:0;">
+    <h1>Bolão VNL 2026 🏐</h1>
+    <p>Bem-vindo, <strong>{{ user.username }}</strong>! Faça seus palpites e dispute o ranking.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-box">
+    <div class="num">{{ stats.total_jogos }}</div>
+    <div class="lbl">Total de Jogos</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" style="color:#16a34a;">{{ stats.realizados }}</div>
+    <div class="lbl">Realizados</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" style="color:#f59e0b;">{{ stats.proximos }}</div>
+    <div class="lbl">Próximos</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" style="color:#7c3aed;">{{ stats.participantes }}</div>
+    <div class="lbl">Participantes</div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- Próximos Jogos Feminino -->
+  <div class="card">
+    <div class="card-title">🏐 Próximos — Feminino</div>
+    {% for jogo in proximos_f %}
+    <div class="jogo-card">
+      <div class="time time-a">{{ jogo.time_a.bandeira }} {{ jogo.time_a.nome }}</div>
+      <div class="vs-box">
+        <div class="vs">{{ jogo.data_hora|date:"d/m" }}</div>
+        <div style="font-size:.75rem;color:#94a3b8;font-weight:600;">{{ jogo.data_hora|time:"H:i" }} (BRT)</div>
+        {% if jogo.palpite_aberto %}
+        <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-gold btn-sm" style="margin-top:.3rem;">Palpitar</a>
+        {% endif %}
+      </div>
+      <div class="time time-b">{{ jogo.time_b.bandeira }} {{ jogo.time_b.nome }}</div>
+    </div>
+    {% empty %}
+    <p style="color:#64748b;font-size:.875rem;">Sem jogos agendados.</p>
+    {% endfor %}
+    <div style="margin-top:.5rem;text-align:right;">
+      <a href="{% url 'jogos' %}?genero=F" class="btn btn-outline btn-sm">Ver todos →</a>
+    </div>
+  </div>
+
+  <!-- Próximos Jogos Masculino -->
+  <div class="card">
+    <div class="card-title">🏐 Próximos — Masculino</div>
+    {% for jogo in proximos_m %}
+    <div class="jogo-card">
+      <div class="time time-a">{{ jogo.time_a.bandeira }} {{ jogo.time_a.nome }}</div>
+      <div class="vs-box">
+        <div class="vs">{{ jogo.data_hora|date:"d/m" }}</div>
+        <div style="font-size:.75rem;color:#94a3b8;font-weight:600;">{{ jogo.data_hora|time:"H:i" }} (BRT)</div>
+        {% if jogo.palpite_aberto %}
+        <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-gold btn-sm" style="margin-top:.3rem;">Palpitar</a>
+        {% endif %}
+      </div>
+      <div class="time time-b">{{ jogo.time_b.bandeira }} {{ jogo.time_b.nome }}</div>
+    </div>
+    {% empty %}
+    <p style="color:#64748b;font-size:.875rem;">Sem jogos agendados.</p>
+    {% endfor %}
+    <div style="margin-top:.5rem;text-align:right;">
+      <a href="{% url 'jogos' %}?genero=M" class="btn btn-outline btn-sm">Ver todos →</a>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- Resultados Recentes -->
+  <div class="card">
+    <div class="card-title">✅ Resultados Recentes</div>
+    {% for jogo in recentes %}
+    <div class="jogo-card">
+      <div class="time time-a" style="{% if jogo.sets_a > jogo.sets_b %}color:#0a2351;{% else %}color:#94a3b8;{% endif %}">
+        {{ jogo.time_a.bandeira }} {{ jogo.time_a.nome }}
+      </div>
+      <div class="vs-box">
+        <div class="placar">{{ jogo.sets_a }}–{{ jogo.sets_b }}</div>
+        <div class="jogo-meta">{{ jogo.data_hora|date:"d/m" }}</div>
+        {% with sets=jogo.sets_detalhados %}
+        {% if sets %}
+        <div class="sets-det">{% for s in sets %}{{ s.0 }}-{{ s.1 }}{% if not forloop.last %} · {% endif %}{% endfor %}</div>
+        {% endif %}
+        {% endwith %}
+      </div>
+      <div class="time time-b" style="{% if jogo.sets_b > jogo.sets_a %}color:#0a2351;{% else %}color:#94a3b8;{% endif %}">
+        {{ jogo.time_b.bandeira }} {{ jogo.time_b.nome }}
+      </div>
+    </div>
+    {% empty %}
+    <p style="color:#64748b;font-size:.875rem;">Nenhum resultado ainda.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Ranking -->
+  <div class="card">
+    <div class="card-title">🏆 Ranking</div>
+    {% if ranking %}
+    <table>
+      <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
+      <tbody>
+      {% for u in ranking %}
+      <tr {% if u == user %}style="background:#eff6ff;font-weight:600;"{% endif %}>
+        <td>
+          {% if forloop.counter == 1 %}<span class="medal-1">🥇</span>
+          {% elif forloop.counter == 2 %}<span class="medal-2">🥈</span>
+          {% elif forloop.counter == 3 %}<span class="medal-3">🥉</span>
+          {% else %}{{ forloop.counter }}{% endif %}
+        </td>
+        <td>{% if u == user %}<strong>{{ u.username }}</strong>{% else %}{{ u.username }}{% endif %}</td>
+        <td><strong>{{ u.pontos|default:0 }}</strong></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p style="color:#64748b;font-size:.875rem;">Nenhum palpite registrado ainda.</p>
+    {% endif %}
+    <div style="margin-top:.75rem;text-align:right;">
+      <a href="{% url 'ranking' %}" class="btn btn-outline btn-sm">Ranking completo →</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

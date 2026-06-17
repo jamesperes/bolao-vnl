@@ -1,0 +1,105 @@
+{% extends 'core/base.html' %}
+{% block title %}Meus Palpites — Bolão VNL 2026{% endblock %}
+
+{% block hero %}
+<div class="hero">
+  <div class="container" style="padding-top:0;padding-bottom:0;">
+    <h1>🎯 Meus Palpites</h1>
+    <p>Acompanhe seu desempenho em cada partida.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Resumo pessoal -->
+<div class="stats-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:1.25rem;">
+  <div class="stat-box">
+    <div class="num">{{ palpites|length }}</div>
+    <div class="lbl">Palpites feitos</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" style="color:#f59e0b;">{{ acertos_exatos }}</div>
+    <div class="lbl">Placares exatos 🎯</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" style="color:#1a4fa0;">{{ total_pts }}</div>
+    <div class="lbl">Pontos totais</div>
+  </div>
+</div>
+
+<div class="card">
+  {% if palpites %}
+  {% for p in palpites %}
+  <div style="border-bottom:1px solid #f1f5f9;padding:.85rem 0;{% if forloop.last %}border-bottom:none;{% endif %}">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:.5rem;">
+
+      <!-- Time A -->
+      <div style="text-align:right;">
+        <span style="font-weight:600;font-size:.9rem;
+          {% if p.jogo.encerrado and p.jogo.sets_a > p.jogo.sets_b %}color:#0a2351;{% elif p.jogo.encerrado %}color:#94a3b8;{% endif %}">
+          {{ p.jogo.time_a.bandeira }} {{ p.jogo.time_a.nome }}
+        </span>
+      </div>
+
+      <!-- Centro -->
+      <div style="text-align:center;min-width:120px;">
+        {% if p.jogo.encerrado %}
+          <!-- Resultado real -->
+          <div style="font-size:1.15rem;font-weight:800;color:#0a2351;">{{ p.jogo.sets_a }}–{{ p.jogo.sets_b }}</div>
+          <!-- Palpite -->
+          <div style="font-size:.75rem;color:#64748b;margin:.1rem 0;">
+            seu palpite: <strong>{{ p.sets_a }}×{{ p.sets_b }}</strong>
+          </div>
+          <!-- Pontos ganhos -->
+          {% if p.pontos == 0 %}
+            <span class="badge badge-gray">0 pts</span>
+          {% elif p.pontos <= 2 %}
+            <span class="badge badge-blue">{{ p.pontos }} pts</span>
+          {% elif p.pontos <= 3 %}
+            <span class="badge badge-green">{{ p.pontos }} pts</span>
+          {% else %}
+            <span class="badge badge-gold">{{ p.pontos }} pts 🎯</span>
+          {% endif %}
+          <!-- Sets detalhados -->
+          {% with sets=p.jogo.sets_detalhados %}
+          {% if sets %}
+          <div style="font-size:.7rem;color:#94a3b8;margin-top:.2rem;">
+            {% for s in sets %}{{ s.0 }}-{{ s.1 }}{% if not forloop.last %} · {% endif %}{% endfor %}
+          </div>
+          {% endif %}
+          {% endwith %}
+        {% else %}
+          <div style="font-size:.85rem;color:#94a3b8;font-weight:600;">vs</div>
+          <div style="font-size:.75rem;color:#64748b;margin:.15rem 0;">{{ p.jogo.data_hora|date:"d/m H:i" }}</div>
+          <div style="background:#dbeafe;border-radius:5px;padding:.2rem .5rem;font-size:.75rem;font-weight:700;color:#1d4ed8;display:inline-block;margin-top:.15rem;">
+            {{ p.sets_a }}×{{ p.sets_b }}
+          </div>
+          <div style="margin-top:.2rem;"><span class="badge badge-gray" style="font-size:.65rem;">Aguardando</span></div>
+        {% endif %}
+      </div>
+
+      <!-- Time B -->
+      <div style="text-align:left;">
+        <span style="font-weight:600;font-size:.9rem;
+          {% if p.jogo.encerrado and p.jogo.sets_b > p.jogo.sets_a %}color:#0a2351;{% elif p.jogo.encerrado %}color:#94a3b8;{% endif %}">
+          {{ p.jogo.time_b.bandeira }} {{ p.jogo.time_b.nome }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Meta do jogo -->
+    <div style="text-align:center;font-size:.72rem;color:#94a3b8;margin-top:.3rem;">
+      {{ p.jogo.semana }} · {{ p.jogo.arena|truncatechars:40 }}
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div style="text-align:center;padding:2.5rem 1rem;color:#94a3b8;">
+    <div style="font-size:3rem;margin-bottom:.75rem;">🏐</div>
+    <p style="font-weight:600;margin-bottom:.35rem;">Você ainda não fez nenhum palpite.</p>
+    <p style="font-size:.875rem;">Confira os jogos disponíveis e comece a palpitar!</p>
+    <a href="{% url 'jogos' %}" class="btn btn-primary" style="margin-top:.75rem;">Ver jogos</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

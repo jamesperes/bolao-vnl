@@ -1,0 +1,142 @@
+{% extends 'core/base.html' %}
+{% block title %}Brasil na VNL 2026 — Estatísticas{% endblock %}
+
+{% block hero %}
+<div class="hero" style="padding:2rem 1.5rem 1.75rem;">
+  <div class="container" style="padding:0;">
+    <div style="font-size:2.8rem;line-height:1;margin-bottom:.5rem;">🇧🇷</div>
+    <h1 style="margin:0 0 .3rem;">Brasil na VNL 2026</h1>
+    <p style="margin:0;opacity:.75;">Resultados, estatísticas e destaques dos jogos brasileiros.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Tabs gênero -->
+<div class="tabs">
+  <a href="?genero=F" class="tab {% if genero == 'F' %}active{% endif %}">♀ Feminino</a>
+  <a href="?genero=M" class="tab {% if genero == 'M' %}active{% endif %}">♂ Masculino</a>
+</div>
+
+<!-- Cards de resumo -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.25rem;">
+  <div style="background:white;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+    <div style="font-size:2rem;font-weight:900;color:#16a34a;">{{ vitorias }}</div>
+    <div style="font-size:.78rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Vitórias</div>
+  </div>
+  <div style="background:white;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+    <div style="font-size:2rem;font-weight:900;color:#dc2626;">{{ derrotas }}</div>
+    <div style="font-size:.78rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Derrotas</div>
+  </div>
+  <div style="background:white;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+    <div style="font-size:2rem;font-weight:900;color:#0a2351;">{{ sets_pro }}</div>
+    <div style="font-size:.78rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Sets pró</div>
+  </div>
+  <div style="background:white;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+    <div style="font-size:2rem;font-weight:900;color:#64748b;">{{ sets_contra }}</div>
+    <div style="font-size:.78rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Sets contra</div>
+  </div>
+</div>
+
+<!-- Jogos do Brasil -->
+<div class="card" style="margin-bottom:1rem;">
+  <div class="card-title">📅 Jogos realizados</div>
+  {% for jogo in jogos %}
+  {% with brasil_e_a=jogo.time_a.nome|stringformat:"s" %}
+  {% if jogo.time_a.nome == 'Brasil' %}
+    {% with s_pro=jogo.sets_a s_con=jogo.sets_b adversario=jogo.time_b %}
+    <a href="{% url 'detalhe_jogo' jogo.pk %}" style="display:flex;align-items:center;gap:.75rem;padding:.65rem .5rem;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit;">
+      <div style="width:2.5rem;text-align:center;font-size:.75rem;color:#64748b;flex-shrink:0;">{{ jogo.data_hora|date:"d/m" }}</div>
+      <div style="font-size:1.2rem;flex-shrink:0;">🇧🇷</div>
+      <div style="flex:1;font-weight:600;font-size:.92rem;color:#0a2351;">Brasil</div>
+      <div style="font-weight:900;font-size:1.15rem;color:{% if s_pro > s_con %}#16a34a{% else %}#dc2626{% endif %};min-width:3rem;text-align:center;">
+        {{ s_pro }}<span style="color:#94a3b8;font-size:.85rem;font-weight:400;">×</span>{{ s_con }}
+      </div>
+      <div style="flex:1;text-align:right;font-weight:600;font-size:.92rem;color:#475569;">{{ adversario.nome }} {{ adversario.bandeira }}</div>
+      {% with sets=jogo.sets_detalhados %}
+      {% if sets %}
+      <div style="font-size:.72rem;color:#94a3b8;min-width:80px;text-align:right;">{% for s in sets %}{{ s.0 }}-{{ s.1 }}{% if not forloop.last %} · {% endif %}{% endfor %}</div>
+      {% endif %}
+      {% endwith %}
+    </a>
+    {% endwith %}
+  {% else %}
+    {% with s_pro=jogo.sets_b s_con=jogo.sets_a adversario=jogo.time_a %}
+    <a href="{% url 'detalhe_jogo' jogo.pk %}" style="display:flex;align-items:center;gap:.75rem;padding:.65rem .5rem;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit;">
+      <div style="width:2.5rem;text-align:center;font-size:.75rem;color:#64748b;flex-shrink:0;">{{ jogo.data_hora|date:"d/m" }}</div>
+      <div style="font-size:1.2rem;flex-shrink:0;">{{ adversario.bandeira }}</div>
+      <div style="flex:1;font-weight:600;font-size:.92rem;color:#475569;">{{ adversario.nome }}</div>
+      <div style="font-weight:900;font-size:1.15rem;color:{% if s_pro > s_con %}#16a34a{% else %}#dc2626{% endif %};min-width:3rem;text-align:center;">
+        {{ s_con }}<span style="color:#94a3b8;font-size:.85rem;font-weight:400;">×</span>{{ s_pro }}
+        <span style="font-size:.65rem;font-weight:600;display:block;color:{% if s_pro > s_con %}#16a34a{% else %}#dc2626{% endif %};">BRA {{ s_pro }}-{{ s_con }}</span>
+      </div>
+      <div style="flex:1;text-align:right;font-weight:700;font-size:.92rem;color:#0a2351;">Brasil 🇧🇷</div>
+      {% with sets=jogo.sets_detalhados %}
+      {% if sets %}
+      <div style="font-size:.72rem;color:#94a3b8;min-width:80px;text-align:right;">{% for s in sets %}{{ s.0 }}-{{ s.1 }}{% if not forloop.last %} · {% endif %}{% endfor %}</div>
+      {% endif %}
+      {% endwith %}
+    </a>
+    {% endwith %}
+  {% endif %}
+  {% endwith %}
+  {% empty %}
+  <p style="color:#94a3b8;text-align:center;padding:1.5rem;">Nenhum jogo realizado ainda.</p>
+  {% endfor %}
+</div>
+
+<!-- Destaques dos jogadores brasileiros -->
+{% if destaques %}
+<div class="card">
+  <div class="card-title">⭐ Destaques individuais — jogadores brasileiros</div>
+  <div style="overflow-x:auto;">
+    <table style="min-width:500px;">
+      <thead>
+        <tr>
+          <th>Jogador</th>
+          <th>Posição</th>
+          <th>Jogo</th>
+          <th style="text-align:center;">Pts</th>
+          <th style="text-align:center;">Aces</th>
+          <th style="text-align:center;">Blo.</th>
+          <th>Observação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in destaques %}
+        <tr>
+          <td style="font-weight:700;color:#0a2351;">{{ d.jogador }}</td>
+          <td style="color:#64748b;font-size:.85rem;">{{ d.posicao }}</td>
+          <td style="font-size:.82rem;">
+            {% if d.jogo %}
+            <a href="{% url 'detalhe_jogo' d.jogo.pk %}" style="color:#2563eb;text-decoration:none;">
+              {% if d.jogo.time_a.nome == 'Brasil' %}vs {{ d.jogo.time_b.nome }}{% else %}vs {{ d.jogo.time_a.nome }}{% endif %}
+              <span style="color:#94a3b8;">{{ d.jogo.data_hora|date:"d/m" }}</span>
+            </a>
+            {% endif %}
+          </td>
+          <td style="text-align:center;">
+            {% if d.pontos is not None %}
+            <span style="background:#dbeafe;color:#1d4ed8;border-radius:20px;padding:.15rem .5rem;font-size:.8rem;font-weight:700;">{{ d.pontos }}</span>
+            {% else %}—{% endif %}
+          </td>
+          <td style="text-align:center;">
+            {% if d.aces %}
+            <span style="background:#dcfce7;color:#15803d;border-radius:20px;padding:.15rem .5rem;font-size:.8rem;font-weight:700;">{{ d.aces }}</span>
+            {% else %}—{% endif %}
+          </td>
+          <td style="text-align:center;">
+            {% if d.bloqueios %}
+            <span style="background:#f3e8ff;color:#7e22ce;border-radius:20px;padding:.15rem .5rem;font-size:.8rem;font-weight:700;">{{ d.bloqueios }}</span>
+            {% else %}—{% endif %}
+          </td>
+          <td style="font-size:.8rem;color:#64748b;font-style:italic;">{{ d.observacao }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
