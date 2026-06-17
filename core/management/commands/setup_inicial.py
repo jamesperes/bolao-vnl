@@ -14,11 +14,21 @@ class Command(BaseCommand):
         admin_pass = os.environ.get('ADMIN_PASSWORD', '')
         admin_email = os.environ.get('ADMIN_EMAIL', '')
 
-        if admin_pass and not Usuario.objects.filter(username=admin_user).exists():
-            Usuario.objects.create_superuser(admin_user, admin_email, admin_pass)
-            self.stdout.write(self.style.SUCCESS(f'Superuser "{admin_user}" criado.'))
+        if not admin_pass:
+            self.stdout.write(self.style.WARNING('ADMIN_PASSWORD não definido, pulando superuser.'))
         else:
-            self.stdout.write(f'Superuser "{admin_user}" já existe ou ADMIN_PASSWORD não definido.')
+            user, created = Usuario.objects.get_or_create(
+                username=admin_user,
+                defaults={'email': admin_email, 'is_staff': True, 'is_superuser': True},
+            )
+            user.set_password(admin_pass)
+            if admin_email:
+                user.email = admin_email
+            user.is_staff = True
+            user.is_superuser = True
+            user.save()
+            acao = 'criado' if created else 'senha atualizada'
+            self.stdout.write(self.style.SUCCESS(f'Superuser "{admin_user}" {acao}.'))
 
         # Importar jogos apenas se o banco estiver vazio
         from core.models import Jogo
