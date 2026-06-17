@@ -29,7 +29,7 @@
     /* ── NAV ── */
     nav {
       background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
-      padding: 0 1.5rem;
+      padding: 0 1.25rem;
       display: flex; align-items: center; gap: 0; height: 56px;
       box-shadow: 0 2px 8px rgba(0,0,0,.3);
       position: sticky; top: 0; z-index: 100;
@@ -37,11 +37,29 @@
     nav .brand {
       font-weight: 800; font-size: 1.15rem; color: white;
       margin-right: auto; display: flex; align-items: center; gap: .5rem; letter-spacing: -.3px;
+      text-decoration: none;
     }
     nav .brand span { color: var(--gold); }
     nav a { color: rgba(255,255,255,.8); text-decoration: none; font-size: .875rem; padding: .5rem .75rem; border-radius: 6px; transition: background .15s, color .15s; white-space: nowrap; }
     nav a:hover { background: rgba(255,255,255,.15); color: white; }
     nav .nav-sep { width: 1px; height: 20px; background: rgba(255,255,255,.2); margin: 0 .25rem; }
+
+    /* hamburguer */
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: .4rem; border-radius: 6px; color: white; font-size: 1.4rem; line-height: 1; }
+    .nav-toggle:hover { background: rgba(255,255,255,.15); }
+    .nav-links { display: flex; align-items: center; gap: 0; }
+
+    /* dropdown mobile */
+    .nav-drawer {
+      display: none; position: fixed; top: 60px; left: 0; right: 0; z-index: 99;
+      background: var(--blue-dark); box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      flex-direction: column; padding: .5rem 0 1rem;
+    }
+    .nav-drawer.open { display: flex; }
+    .nav-drawer a { color: rgba(255,255,255,.85); text-decoration: none; font-size: 1rem;
+      padding: .75rem 1.5rem; border-radius: 0; display: block; font-weight: 500; }
+    .nav-drawer a:hover { background: rgba(255,255,255,.1); color: white; }
+    .nav-drawer .nav-drawer-sep { height: 1px; background: rgba(255,255,255,.1); margin: .4rem 1rem; }
 
     /* ── HERO BANNER ── */
     .hero {
@@ -146,7 +164,8 @@
     @media (max-width: 640px) {
       .stats-row { grid-template-columns: repeat(2, 1fr); }
       .grid-2 { grid-template-columns: 1fr; }
-      nav a.hide-mobile { display: none; }
+      .nav-toggle { display: flex; align-items: center; justify-content: center; }
+      .nav-links { display: none; }
       .jogo-card .time { font-size: .82rem; }
     }
   </style>
@@ -155,17 +174,51 @@
 <div class="vnl-stripe"></div>
 {% if user.is_authenticated %}
 <nav>
-  <div class="brand">🏐 <span>VNL</span> 2026</div>
-  <a href="{% url 'home' %}">Início</a>
-  <a href="{% url 'jogos' %}">Jogos</a>
-  <a href="{% url 'ranking' %}">Ranking</a>
+  <a href="{% url 'home' %}" class="brand">🏐 <span>VNL</span> 2026</a>
+
+  <!-- links desktop -->
+  <div class="nav-links">
+    <a href="{% url 'home' %}">Início</a>
+    <a href="{% url 'jogos' %}">Jogos</a>
+    <a href="{% url 'ranking' %}">Ranking</a>
+    <a href="{% url 'palpite_campeao' %}">🏆 Campeão</a>
+    <a href="{% url 'brasil_stats' %}">🇧🇷 Brasil</a>
+    <a href="{% url 'meus_palpites' %}">Meus Palpites</a>
+    {% if user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a>{% endif %}
+    <div class="nav-sep"></div>
+    <a href="{% url 'logout' %}" style="font-size:.8rem;opacity:.7;">{{ user.username }} ↩</a>
+  </div>
+
+  <!-- hamburguer mobile -->
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+</nav>
+
+<!-- drawer mobile -->
+<div class="nav-drawer" id="nav-drawer">
+  <a href="{% url 'home' %}">🏠 Início</a>
+  <a href="{% url 'jogos' %}">🏐 Jogos</a>
+  <a href="{% url 'ranking' %}">🏅 Ranking</a>
   <a href="{% url 'palpite_campeao' %}">🏆 Campeão</a>
   <a href="{% url 'brasil_stats' %}">🇧🇷 Brasil</a>
-  <a href="{% url 'meus_palpites' %}" class="hide-mobile">Meus Palpites</a>
-  {% if user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a>{% endif %}
-  <div class="nav-sep"></div>
-  <a href="{% url 'logout' %}" style="font-size:.8rem;opacity:.7;">{{ user.username }} ↩</a>
-</nav>
+  <a href="{% url 'meus_palpites' %}">📋 Meus Palpites</a>
+  {% if user.is_staff %}<a href="{% url 'admin:index' %}">⚙️ Admin</a>{% endif %}
+  <div class="nav-drawer-sep"></div>
+  <a href="{% url 'logout' %}" style="opacity:.7;">{{ user.username }} — Sair ↩</a>
+</div>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const drawer = document.getElementById('nav-drawer');
+  toggle.addEventListener('click', () => {
+    const open = drawer.classList.toggle('open');
+    toggle.textContent = open ? '✕' : '☰';
+  });
+  // fecha ao clicar num link
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    drawer.classList.remove('open');
+    toggle.textContent = '☰';
+  }));
+</script>
 {% endif %}
 
 {% block hero %}{% endblock %}
