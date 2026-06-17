@@ -83,11 +83,19 @@
       {% else %}
         <div style="font-size:.8rem;font-weight:700;color:#64748b;">{{ jogo.data_hora|date:"d/m" }}</div>
         <div style="font-size:.72rem;color:#94a3b8;">{{ jogo.data_hora|time:"H:i" }}</div>
-        {% for jid, p in palpites_usuario.items %}{% if jid == jogo.pk %}
-        <div style="margin-top:.25rem;background:#dbeafe;border-radius:5px;padding:.15rem .35rem;font-size:.68rem;font-weight:700;color:#1d4ed8;">🎯 {{ p.sets_a }}×{{ p.sets_b }}</div>
-        {% endif %}{% endfor %}
         {% if jogo.palpite_aberto %}
-        <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-gold btn-sm" style="margin-top:.3rem;font-size:.7rem;padding:.25rem .5rem;">Palpitar</a>
+          {% if jogo.pk in palpites_usuario %}
+            {% for jid, p in palpites_usuario.items %}{% if jid == jogo.pk %}
+            <div style="margin-top:.25rem;background:#dbeafe;border-radius:5px;padding:.15rem .35rem;font-size:.68rem;font-weight:700;color:#1d4ed8;">🎯 {{ p.sets_a }}×{{ p.sets_b }}</div>
+            {% endif %}{% endfor %}
+            <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-sm" style="margin-top:.3rem;background:#7c3aed;color:white;font-size:.7rem;padding:.25rem .5rem;">Alterar palpite</a>
+          {% else %}
+            <a href="{% url 'palpitar' jogo.pk %}" class="btn btn-gold btn-sm" style="margin-top:.3rem;font-size:.7rem;padding:.25rem .5rem;">Palpitar</a>
+          {% endif %}
+        {% else %}
+          {% for jid, p in palpites_usuario.items %}{% if jid == jogo.pk %}
+          <div style="margin-top:.25rem;background:#dbeafe;border-radius:5px;padding:.15rem .35rem;font-size:.68rem;font-weight:700;color:#1d4ed8;">🎯 {{ p.sets_a }}×{{ p.sets_b }}</div>
+          {% endif %}{% endfor %}
         {% endif %}
       {% endif %}
     </div>
